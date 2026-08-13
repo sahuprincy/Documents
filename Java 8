@@ -1,0 +1,42 @@
+Functional Interface
+
+
+A Functional Interface is an interface that contains exactly one abstract method.
+
+
+
+
+Before Java 8, we had to create separate classes or anonymous classes to implement interfaces.
+
+
+With Functional Interfaces + Lambda Expressions, we can write concise and readable code.
+
+Benefits
+	• ✅ Supports Lambda Expressions
+	• ✅ Reduces boilerplate code
+	• ✅ Improves readability
+	• ✅ Enables Functional Programming in Java
+	• ✅ Widely used in Streams API and Collections
+
+Common Built-in Functional Interfaces
+
+Predicate<T> // Returns boolean- filter 
+Function<T,R> // Takes input, returns output - map
+Consumer<T> // Takes input, returns nothing 
+Consumer → forEach()
+Supplier<T> // Returns value, takes no input- 
+Supplier → generate()
+
+
+Can a functional interface have multiple methods?
+A: It can have only one abstract method, but it can have multiple default, static, and private (Java 9+) methods.
+
+
+Optional.of/ofNullable/empty
+of(): non-null only; 
+
+ofNullable(): null allowed; 
+
+empty(): empty Optional.
+
+

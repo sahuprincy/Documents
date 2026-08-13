@@ -1,0 +1,432 @@
+
+
+• JDK (Java Development Kit): Used for development. Contains JRE and development tools.
+• JRE (Java Runtime Environment): Runs Java applications.
+• JVM (Java Virtual Machine): Executes Java bytecode.
+
+Class Loader
+Class Loader dynamically loads Java classes into the JVM at runtime.
+
+The JVM first loads the Employee.class file into memory using a Class Loader, and then creates the object.
+
+Benefits:
+	• Loads classes on demand (lazy loading)
+	• Saves memory
+	• Supports dynamic loading
+	• Provides security through class loading hierarchy
+	• Enables modular applications and application servers
+
+
+Types of Class Loaders
+Java provides three built-in class loaders.
+1. Bootstrap Class Loader
+Parent of all class loaders.
+Loads core Java classes.
+
+
+java.lang.String
+java.lang.System
+java.util.ArrayList
+
+
+System.out.println(String.class.getClassLoader());
+null
+
+Why?
+Because Bootstrap Loader is implemented in native code and represented as null.
+
+
+
+
+2. Platform (Extension) Class Loader
+Loads JDK platform libraries.
+
+
+java.sql
+java.xml
+java.naming
+
+
+3. Application Class Loader
+Loads classes from application's classpath.
+
+Employee.class
+Student.class
+OrderService.class
+
+
+
+Class Loader Hierarchy
+
+Application ClassLoader
+
+↑
+
+Platform ClassLoader
+
+↑
+
+Bootstrap ClassLoader
+
+
+Parent Delegation Model
+This is one of the most important interview questions.
+
+Step 1
+Application Loader receives request.
+Step 2
+Delegates to parent.
+
+
+App Loader
+ ↓
+Platform Loader
+ ↓
+Bootstrap Loader
+
+
+Step 3
+Bootstrap finds String class.
+Step 4
+Returns class.
+Why?
+Security.
+Your application cannot replace:
+
+
+java.lang.String
+java.lang.System
+java.lang.Object
+
+With malicious version
+
+
+The class loading hierarchy provides security through the Parent Delegation Model. Before loading a class, a class loader delegates the request to its parent. Since core Java classes are loaded by the Bootstrap Class Loader first, application code cannot override or replace trusted system classes like java.lang.String, thereby protecting the JVM from malicious class spoofing and ensuring class integrity.
+
+
+
+
+Encapsulation is an OOP principle in which data and methods are wrapped into a single unit (class), and data is hidden using private access modifiers while providing controlled access through getters and setters.
+ This improves security and maintainability. 
+
+Benefits:
+	• Data security
+	• Controlled access to data
+	• Better maintainability
+
+
+This is encapsulation because the internal data is protected and can only be accessed through controlled methods.
+
+Data Hiding is the practice of restricting direct access to an object's data (variables) and allowing access only through controlled methods.
+It is achieved using access modifiers (private, protected, public, default).
+
+Why Data Hiding?
+	• Protects data from unauthorized access.
+	• Prevents accidental modification of data.
+	• Improves security and maintainability.
+	• Supports encapsulation.
+
+Data Hiding	Encapsulation
+Restricts direct access to data.	Bundles data and methods into a single unit (class).
+Achieved mainly using private access modifier.	Achieved using classes, private fields, and public methods.
+Focuses on security.	Focuses on data security and abstraction.
+
+
+Immutable 
+An Immutable Class is a class whose objects cannot be modified after they are created.
+
+
+Rules to Create an Immutable Class
+	1. Declare the class as final so it cannot be extended.
+	2. Make all fields private and final.
+	3. Do not provide setter methods.
+	4. Initialize fields through a constructor.
+	5. Return copies of mutable objects instead of directly returning references.
+
+String is immutable, and concat() creates a new String object containing the modified value.
+
+An immutable object cannot be modified after creation.
+Benefits:
+	• Thread-safe
+	• Secure
+	• Easy caching
+Why is String immutable?
+	• Security
+	• Thread safety
+	• String pool optimization
+	• Hashcode caching
+
+
+
+
+Method Overloading
+	• Same method name, but different parameters (number, type, or order of parameters).
+	• Happens within the same class.
+	• Achieves compile-time polymorphism.
+
+Method Overriding
+
+• A child class provides its own implementation of a method already defined in the parent class.
+• Method name, parameters, and return type must be the same.
+• Achieves runtime polymorphism.
+
+
+Type Casting in Java
+Type Casting means converting a variable from one data type to another.
+
+There are two types of type casting:
+1. Widening Casting (Implicit Casting)
+Converting a smaller data type to a larger data type.
+
+
+int num = 100;
+long l = num; // automatic
+double d = l; // automatic
+
+System.out.println(d);
+
+
+
+✅ No data loss
+✅ Done automatically by Java
+
+
+
+Narrowing Casting (Explicit Casting)
+Converting a larger data type to a smaller data type.
+
+
+
+double d = 100.75;
+int num = (int) d;
+
+System.out.println(num);
+
+The decimal part is lost.
+✅ Requires explicit cast
+⚠ Possible data loss
+
+Type Casting with Objects (Upcasting & Downcasting)
+Upcasting
+Child object assigned to Parent reference.
+
+
+class Animal {}
+
+class Dog extends Animal {}
+
+Animal a = new Dog();
+
+✅ Automatic
+✅ Safe
+
+
+
+Downcasting
+Parent reference converted to Child reference.
+
+
+Animal a = new Dog();
+
+Dog d = (Dog) a;
+
+
+Requires explicit cast
+
+
+
+
+ArrayList	LinkedList
+Dynamic array	Doubly linked list
+Fast retrieval	Fast insertion/deletion
+Uses less memory	Uses more memory
+
+
+
+Idempotency means that performing the same operation multiple times produces the same result as performing it once.
+
+
+idempotency works by associating each request with a unique Idempotency Key. When the server receives a request, it first checks whether that key has already been processed. If not, it executes the operation and stores the result against the key. If the same request is received again with the same key, the server returns the previously stored response instead of executing the operation again, thereby preventing duplicate processing.
+
+
+Abstract Class
+
+An abstract class is a class that cannot be instantiated (you cannot create its object directly). It is used to provide a common base class for other classes.
+Key Points
+	• Declared using the abstract keyword.
+	• Can have abstract methods (methods without implementation).
+	• Can have concrete methods (methods with implementation).
+	• Can have constructors, variables, and static methods.
+	• A subclass must implement all abstract methods, otherwise the subclass must also be declared abstract.
+
+
+Abstract Method
+An abstract method is a method that has only a declaration and no implementation. It must be implemented by the child class.
+
+Key Points
+	• Abstract methods are declared using the abstract keyword.
+	• They do not have a method body.
+	• They can only exist inside an abstract class (or interface).
+	• Child classes must provide the implementation; otherwise, the child class must also be declared abstract.
+
+An abstract method is a method without implementation that defines a contract for subclasses, forcing them to provide their own implementation.
+
+
+
+
+
+
+
+
+If Hashtable is thread-safe, why is HashMap preferred?
+Answer:
+	• Hashtable synchronizes every operation, which impacts performance.
+	• HashMap is faster.
+
+Map<Integer, String> table = new Hashtable<>();
+
+Map<Integer, String> map = new HashMap<>();
+
+
+Feature	HashMap	Hashtable
+Thread Safety	❌ Not synchronized	✅ Synchronized
+Performance	Faster	Slower due to synchronization
+Null Key	✅ One null key allowed	❌ Not allowed
+Null Values	✅ Multiple null values allowed	❌ Not allowed
+Introduced In	Java Collections Framework (JDK 1.2)	Legacy class (JDK 1.0)
+Iterator Support	Uses Iterator	Uses Enumeration and Iterator
+Preferred Today?	✅ Yes	❌ Rarely used
+
+HashMap	Hashtable
+Not synchronized	Synchronized
+Allows null	No null key/value
+Faster	Slower
+
+Garbage Collector (GC) in Java
+Garbage Collector (GC) is a JVM mechanism that automatically frees memory by removing objects that are no longer reachable or used by the application.
+
+Automatic memory management.
+Removes unreachable objects.
+
+
+Employee emp = new Employee();
+
+Every object created would remain in memory forever unless manually deleted.
+Java automatically identifies unused objects and reclaims their memory.
+
+
+Garbage Collection is the JVM's automatic memory management process that identifies unreachable objects in the heap and reclaims their memory, helping prevent memory leaks and reducing the need for manual memory management. 
+
+
+Minor GC
+Occurs in Young Generation.
+Fast.
+
+Major GC
+Cleans Old Generation.
+Slower.
+
+Full GC
+Entire heap cleaned.
+Most expensive.
+
+
+Common Collectors
+Serial GC
+Single-threaded.
+
+Parallel GC
+Uses multiple threads
+
+How do objects become eligible for GC?
+	• Null reference
+	• Reassigned reference
+	• Out of scope
+	• Anonymous objects
+
+Can GC remove objects with references?
+No.
+Reachable objects are not collected.
+
+
+Memory Management 
+
+Memory Management in Java is the process by which the JVM allocates and deallocates memory during program execution. Java performs automatic memory management using the Garbage Collector (GC), which removes objects that are no longer reachable.
+Java memory is mainly divided into:
+	1. Stack Memory
+		○ Stores local variables and method calls.
+		○ Thread-specific.
+		○ Automatically cleared when a method completes.
+	2. Heap Memory
+		○ Stores objects and instance variables.
+		○ Shared among threads.
+		○ Managed by the Garbage Collector.
+	3. Metaspace (Method Area)
+		○ Stores class metadata, static variables, and method information
+		
+Metaspace is the memory area in the JVM that stores class metadata such as:
+	• Class definitions
+	• Method metadata
+	• Field metadata
+	• Runtime constant pool
+	• Static variables (associated with class metadata)
+	• Annotations
+Metaspace was introduced in Java 8 and replaced PermGen (Permanent Generation).
+
+When Employee.class is loaded:
+	• Object instances → go to Heap
+	• Local variables → go to Stack
+	• Class metadata of Employee → goes to Metaspace
+
+Difference Between PermGen and Metaspace
+PermGen	Metaspace
+Used until Java 7	Introduced in Java 8
+Part of JVM Heap	Uses Native Memory
+Fixed size by default	Dynamically grows
+OutOfMemoryError: PermGen space	OutOfMemoryError: Metaspace
+Difficult to tune	Better memory management
+Stores class metadata	Stores class metadata
+
+
+Q: Where are objects stored?
+Answer: Heap Memory.
+Q: Where are local variables stored?
+Answer: Stack Memory.
+Q: What is stored in Metaspace?
+Answer: Class metadata, method information, and static variables.
+Q: Who manages heap memory?
+Answer: JVM Garbage Collector.
+Q: Difference between Stack and Heap?
+Answer:
+	• Stack stores local variables and method calls.
+	• Heap stores objects.
+	• Stack is automatically managed.
+	• Heap is managed by the Garbage Collector.
+
+
+Java Memory Model (JMM)
+The Java Memory Model (JMM) defines how threads interact with memory and ensures visibility of shared variables.
+
+JMM Concepts
+Visibility
+When Thread A updates a variable, Thread B should see the latest value.
+Atomicity
+Operation completes entirely or not at all.
+Ordering
+Instructions execute in expected order.
+
+Java Memory Model defines the rules for visibility, atomicity, and ordering of shared data between threads. It ensures consistent behavior in concurrent applications using constructs like synchronized, volatile, and locks.
+
+
+Volatile guarantees visibility of variable updates across threads and prevents instruction reordering, but it does not make compound operations atomic.
+
+synchronized	ReentrantLock
+Keyword	Class
+Automatic lock release	Manual release
+Simpler	More flexible
+No timeout	Supports timeout
+No fairness	Fair locking supported
+
+
+JVM loads classes through Loading, Linking, and Initialization phases using Bootstrap, Platform, and Application class loaders following the Parent Delegation Model.
+

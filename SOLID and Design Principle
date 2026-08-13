@@ -1,0 +1,428 @@
+
+S - Single Responsibility- Emp save, generate Report and send email
+ One class → One responsibility
+A class should have only one reason to change, meaning it should have only one responsibility.
+
+
+
+O - Open/Closed- Payment 
+ Open for extension, Closed for modification
+We should add new functionality without modifying existing code.
+
+In place of : , we should use implements 
+
+
+
+
+L - Liskov Substitution
+ Child should replace parent without issues
+
+Derived classes should be replaceable with their base classes without affecting program correctness.
+
+
+Liskov 
+
+public interface NotificationService {
+ void sendNotification(String msg);
+}
+
+@Service
+class EmailNotificationService
+ implements NotificationService {
+
+ public void sendNotification(String msg) {
+ System.out.println("Email Sent");
+ }
+}
+
+@Service
+class SmsNotificationService
+ implements NotificationService {
+
+ public void sendNotification(String msg) {
+ System.out.println("SMS Sent");
+ }
+}
+
+
+@Autowired
+private NotificationService notificationService;
+
+Whether Spring injects: SmsNotificationService, EmailNotificationService
+the application still works correctly.
+✅ This follows LSP.
+
+
+
+
+I - Interface Segregation- Printer
+ Many small interfaces are better than one large interface
+
+
+
+interface Printable {
+ void print();
+}
+
+interface Scannable {
+ void scan();
+}
+
+interface Faxable {
+ void fax();
+}
+
+
+
+class BasicPrinter implements Printable {
+
+ @Override
+ public void print() {
+ System.out.println("Printing...");
+ }
+}
+
+
+
+
+D - Dependency Inversion- IOC
+ Depend on abstractions, not implementations
+
+
+High-level modules should not depend on low-level modules. Both should depend on abstractions.
+
+
+
+
+
+
+
+
+Design Patterns 
+
+1. Singleton Pattern
+Purpose: Ensures only one instance of a class exists.
+
+
+public class Singleton {
+
+private static volatile Singleton instance;
+	//Without volatile, JVM may reorder instructions:
+	Internally:
+		1. Allocate memory
+		2. Assign reference
+		3. Initialize object
+	Due to optimization, step 2 may happen before step 3.
+	Another thread may get a partially initialized object.
+	volatile prevents this issue.
+	
+
+ private Singleton() {}
+
+ 
+public static Singleton getInstance() {
+if (instance == null) { // First Check
+synchronized (Singleton.class) {
+if (instance == null) { // Second Check
+
+instance = new Singleton();
+}
+}
+}
+}
+
+Spring ex
+
+@Service
+public class EmployeeService {
+}
+
+
+
+By default, Spring beans are Singleton.
+
+
+
+
+
+
+
+
+The JVM guarantees only one enum instance.
+✅ Thread-safe by default.
+
+
+Enum Singleton is the recommended way to implement the Singleton pattern in Java. An enum with a single element, such as INSTANCE, guarantees only one object creation by the JVM.
+
+ It is thread-safe by default and protects against reflection and serialization attacks, making it more robust than traditional Singleton implementations.
+Enum Singleton, because it is simple, thread-safe, serialization-safe, and reflection-safe
+
+
+Factory Pattern
+Purpose: Creates objects without exposing creation logic.
+
+
+
+// Product Interface
+interface Payment {
+ void pay();
+}
+
+// Concrete Products
+class UPI implements Payment {
+ @Override
+ public void pay() {
+ System.out.println("Payment through UPI");
+ }
+}
+
+class Card implements Payment {
+ @Override
+ public void pay() {
+ System.out.println("Payment through Card");
+ }
+}
+
+// Factory Class
+class PaymentFactory {
+
+ public static Payment getPayment(String type) {
+
+ if (type == null) {
+ throw new IllegalArgumentException("Payment type cannot be null");
+ }
+
+ switch (type.toUpperCase()) {
+ case "UPI":
+ return new UPI();
+
+ case "CARD":
+ return new Card();
+
+ default:
+ throw new IllegalArgumentException(
+ "Invalid payment type: " + type);
+ }
+ }
+}
+
+// Client
+public class Main {
+ public static void main(String[] args) {
+
+ Payment payment = PaymentFactory.getPayment("UPI");
+ payment.pay();
+
+ Payment payment2 = PaymentFactory.getPayment("CARD");
+ payment2.pay();
+ }
+}
+
+
+
+Spring Example:
+	• BeanFactory
+	• ApplicationContext
+
+
+Builder Pattern
+Purpose: Creates complex objects step-by-step.
+
+
+Employee employee = Employee.builder()
+ .id(1)
+ .name("Princy")
+ .salary(50000)
+ .build();
+
+
+Spring/Java Example:
+	• Lombok @Builder
+	• StringBuilder
+
+Observer Pattern
+Purpose: One object notifies multiple dependent objects.
+
+
+Publisher
+ |
+ +--> Subscriber 1
+ +--> Subscriber 2
+ +--> Subscriber 3
+
+Spring ex
+
+ApplicationEventPublisher.publishEvent()
+
+Real Example:
+	• Kafka
+	• Event Listeners
+	• Email Notifications
+
+Strategy Pattern
+Purpose: Choose an algorithm at runtime.
+
+interface PaymentStrategy {
+ void pay();
+}
+
+class UPI implements PaymentStrategy {}
+class CreditCard implements PaymentStrategy {}
+
+
+
+Real Example:
+	• Payment Methods
+	• Notification Channels
+
+
+6. Proxy Pattern
+Purpose: Controls access to an object.
+
+
+Client
+ |
+ Proxy
+ |
+ Real Object
+Spring Examples:
+	• @Transactional
+	• AOP
+	• @Cacheable
+
+
+Adapter Pattern
+Purpose: Makes incompatible interfaces work together.
+
+
+
+
+
+interface NewPaymentGateway {}
+
+class OldGateway {}
+
+class Adapter implements NewPaymentGateway {
+ private OldGateway oldGateway;
+}
+
+
+Real Example:
+	• Third-party API Integration
+
+
+
+
+Template Method Pattern
+Purpose: Defines the workflow while allowing subclasses to customize steps.
+
+
+abstract class Payment {
+
+ public void process() {
+ validate();
+ pay();
+ }
+
+ abstract void pay();
+}
+
+
+
+Spring Example:
+	• JdbcTemplate
+	• RestTemplate
+
+
+
+Singleton -> One object only
+Factory -> Object creation
+Builder -> Complex object creation
+Strategy -> Select algorithm at runtime
+Observer -> One-to-many notification
+Proxy -> Controls access
+Adapter -> Convert interfaces
+Template -> Fixed workflow with custom steps
+
+
+1. Creational Design Patterns
+These patterns deal with object creation mechanisms and help make the system independent of how objects are created.
+
+
+Pattern	Purpose
+Singleton	Ensures only one instance of a class exists.
+Factory Method	Creates objects without specifying the exact class.
+Abstract Factory	Creates families of related objects.
+Builder	Constructs complex objects step by step.
+Prototype	Creates objects by cloning existing objects.
+
+
+
+2. Structural Design Patterns
+These patterns focus on how classes and objects are composed to form larger structures.
+Pattern	Purpose
+Adapter	Converts one interface into another.
+Bridge	Separates abstraction from implementation.
+Composite	Treats individual and group objects uniformly.
+Decorator	Adds new behavior dynamically.
+Facade	Provides a simplified interface to a subsystem.
+Flyweight	Reduces memory usage by sharing objects.
+Proxy	Controls access to another object.
+
+
+
+
+3. Behavioral Design Patterns
+These patterns deal with communication and responsibility between objects.
+Pattern	Purpose
+Observer	Notifies dependent objects about state changes.
+Strategy	Defines interchangeable algorithms.
+Command	Encapsulates a request as an object.
+Chain of Responsibility	Passes requests along a chain of handlers.
+State	Changes behavior when state changes.
+Template Method	Defines skeleton of an algorithm.
+Mediator	Reduces direct communication between objects.
+Memento	Saves and restores object state.
+Iterator	Sequentially accesses collection elements.
+Visitor	Adds operations without modifying classes.
+Interpreter	Defines grammar and interpretation rules.
+
+
+Design Patterns
+│
+├── Creational
+│ ├── Singleton
+│ ├── Factory Method
+│ ├── Abstract Factory
+│ ├── Builder
+│ └── Prototype
+│
+├── Structural
+│ ├── Adapter
+│ ├── Bridge
+│ ├── Composite
+│ ├── Decorator
+│ ├── Facade
+│ ├── Flyweight
+│ └── Proxy
+│
+└── Behavioral
+ ├── Observer
+ ├── Strategy
+ ├── Command
+ ├── Chain of Responsibility
+ ├── State
+ ├── Template Method
+ ├── Mediator
+ ├── Memento
+ ├── Iterator
+ ├── Visitor
+ └── Interpreter
+
+
+
+
+
+
+
+

@@ -1,0 +1,12 @@
+What is a Sealed Class?
+A Sealed Class restricts which classes can extend or implement it.
+
+
+Why Do We Need Sealed Classes?
+✅ Restrict inheritance
+✅ Improve security
+✅ Better domain modeling
+✅ More predictable code
+✅ Useful with Pattern Matching and Switch expressions
+
+allows developers to control which classes can extend or implement a class or interface using the permits keyword. It provides restricted inheritance, improving security and maintainability. Unlike a final class, which prevents all inheritance, a sealed class allows inheritance only to a predefined set of subclasses. This is particularly useful for domain models like Payment, Vehicle, and Shape hierarchies.
